@@ -128,7 +128,7 @@ class Extension(BaseExtension):
     def generate_data_injection(self, data):
         for lora in self.available_loras(data["action"]):
             if lora["enabled"]:
-                data["options"]["lora"] = [(lora.name.get(), lora.scale.get())]
+                data["options"]["lora"] = [(lora["name"], lora["scale"])]
         return data
 
     def call_pipe(self, options, model_base_path, pipe, **kwargs):
