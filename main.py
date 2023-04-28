@@ -126,9 +126,11 @@ class Extension(BaseExtension):
         self.settings_manager.save_settings()
 
     def generate_data_injection(self, data):
+        data["options"]["lora"] = []
         for lora in self.available_loras(data["action"]):
             if lora["enabled"]:
-                data["options"]["lora"] = [(lora["name"], lora["scale"])]
+                print(lora)
+                data["options"]["lora"].append((lora["name"], lora["scale"]))
         return data
 
     def call_pipe(self, options, model_base_path, pipe, **kwargs):
@@ -144,7 +146,8 @@ class Extension(BaseExtension):
                 try:
                     pipe = self.load_lora(pipe, filepath)
                 except RuntimeError as e:
-                    continue
+                    print(e)
+                    print("Failed to load lora")
             self.lora_loaded = True
         return pipe
 
