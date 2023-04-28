@@ -55,6 +55,9 @@ class Extension(BaseExtension):
             possible_line_endings = ["ckpt", "safetensors", "bin"]
             self.settings_manager.enable_save()
 
+            if not os.path.exists(loras_path):
+                os.makedirs(loras_path)
+
             for f in os.listdir(loras_path):
                 if f.split(".")[-1] in possible_line_endings:
                     name = f.split(".")[0]
