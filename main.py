@@ -1,5 +1,5 @@
 import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QLineEdit, QPushButton, QHBoxLayout
 from PyQt6.QtCore import pyqtSignal
 from airunner.extensions import BaseExtension
 from aihandler.qtvar import Var, StringVar, FloatVar, BooleanVar
@@ -250,3 +250,21 @@ class Extension(BaseExtension):
                 curr_layer.weight.data += multiplier * alpha * torch.mm(weight_up, weight_down)
 
         return pipeline
+
+    def preferences_injection(self, window):
+        preferences_widget = self.load_template("preferences")
+        preferences_widget.lora_path.textChanged.connect(
+            lambda val: self.settings_manager.settings.lora_path.set(val))
+        preferences_widget.lora_browse_button.clicked.connect(
+            lambda: self.browse_for_lora_path(self.template.lora_path))
+        preferences_widget.lora_path.setText(
+            self.settings_manager.settings.lora_path.get())
+        layout = window.template.frame.layout()
+        if layout is not None:
+            layout.addWidget(preferences_widget)
+            window.show()
+        else:
+            print("Layout is not set up")
+
+
+
